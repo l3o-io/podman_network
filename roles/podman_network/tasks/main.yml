@@ -1,0 +1,29 @@
+--- # roles/podman_network/tasks/main.yml
+
+- name: Install home:cfelder:CentOS-8 repository
+  get_url:
+    url: https://download.opensuse.org/repositories/home:cfelder:CentOS-8/CentOS_8/home:cfelder:CentOS-8.repo
+    dest: /etc/yum.repos.d/
+  when: not skip_podman_plugins_install and ansible_os_family == "RedHat" and ansible_distribution_major_version|int == 8
+
+- name: Install podman-plugins package
+  package:
+    name: podman-plugins
+    state: installed
+  when: not skip_podman_plugins_install
+
+- name: Check whether podman network already exists
+  command:
+    cmd: "podman network inspect {{ podman_network_name }}"
+  register: podman_network_check
+  ignore_errors: yes
+  become: yes
+  when: podman_network_name is defined
+
+- name: Create podman network
+  command: "podman network create {{ podman_network_name }}"
+  when: podman_network_state == "present" and podman_network_check.failed
+
+- name: Delete podman network
+  command: "podman network rm {{ podman_network_name }}"
+  when: podman_network_state == "absent" and not podman_network_check.failed

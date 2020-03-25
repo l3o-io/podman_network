@@ -1,0 +1,3 @@
+--- # roles/podman_network/defaults/main.yml
+
+skip_podman_plugins_install: no

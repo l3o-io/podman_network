@@ -20,7 +20,7 @@ Example Playbook
 The following playbook installs the dnsname plugin package (**podman-plugins**) and creates a new CNI network named ``dnsname0``:
 
     - name: Create new podman network
-    - hosts: all
+      hosts: all
       tasks:
         - include_role:
             name: podman_network

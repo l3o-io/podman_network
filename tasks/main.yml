@@ -1,10 +1,10 @@
 --- # roles/podman_network/tasks/main.yml
 
-- name: Install home:cfelder:CentOS-8 repository
+- name: Install home:cfelder:CentOS-X repository
   get_url:
-    url: https://download.opensuse.org/repositories/home:cfelder:CentOS-8/CentOS_8/home:cfelder:CentOS-8.repo
+    url: "https://download.opensuse.org/repositories/home:cfelder:CentOS-{{ ansible_distribution_major_version|int }}/CentOS_{{ ansible_distribution_major_version|int }}/home:cfelder:CentOS-{{ ansible_distribution_major_version|int }}.repo"
     dest: /etc/yum.repos.d/
-  when: not skip_podman_plugins_install and ansible_os_family == "RedHat" and ansible_distribution_major_version|int == 8
+  when: not skip_podman_plugins_install and ansible_os_family == "RedHat" and ( ansible_distribution_major_version|int == 8 or ansible_distribution_major_version|int == 7 )
 
 - name: Install podman-plugins package
   package:
